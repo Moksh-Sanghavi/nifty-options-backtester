@@ -1,4 +1,4 @@
-# 📈 Nifty Options Backtester
+# Nifty Options Backtester
 
 A full stack web application for backtesting **Nifty 50 options strategies**,  wrapping a production grade quant engine in an asynchronous API and a premium, interactive dashboard.
 
