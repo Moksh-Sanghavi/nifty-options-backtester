@@ -1,0 +1,23 @@
+# ──────────────────────────────────────────────────────────────────────────
+#  Backend dependencies — Nifty Options Backtester web service
+#  Python 3.12 (pinned in Dockerfile). Pins use compatible-release (~=).
+# ──────────────────────────────────────────────────────────────────────────
+
+# --- Web framework / API ---
+fastapi~=0.115
+uvicorn[standard]~=0.34
+pydantic~=2.10
+pydantic-settings~=2.7
+python-multipart~=0.0.12          # form / future file uploads
+
+# --- Task queue & broker ---
+celery~=5.4
+redis~=5.2
+
+# --- Data & quant engine ---
+# Floors only (not capped) so pip can resolve wheels for newer Python (3.14
+# local) as well as the pinned 3.12 Docker image.
+pandas>=2.2
+pyarrow>=18.1                      # Parquet I/O
+scipy>=1.14                        # Black-Scholes IV (brentq, norm)
+numpy>=2.1

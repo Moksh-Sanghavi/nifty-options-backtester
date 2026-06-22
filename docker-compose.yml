@@ -1,0 +1,80 @@
+# ──────────────────────────────────────────────────────────────────────────
+#  Full-stack orchestration for the Nifty Options Backtester.
+#
+#    redis     — message broker + result backend for Celery
+#    backend   — FastAPI API server (uvicorn)
+#    worker    — Celery worker running the long backtest computations
+#    frontend  — Next.js app
+#
+#  Prereq: generate the Parquet dataset once so backend/data/*.parquet exists:
+#    (host)  cd backend && python -m scripts.convert_to_parquet --dataset dec2023
+#
+#  Then bring the whole stack up with:  docker compose up --build
+# ──────────────────────────────────────────────────────────────────────────
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATA_DIR=/app/data
+      - STOCK_CODE=NIFTY
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  worker:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATA_DIR=/app/data
+      - STOCK_CODE=NIFTY
+    volumes:
+      - ./backend:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A app.celery_app.celery worker --loglevel=info --pool=solo
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      # Browser-side calls hit the host-published API port.
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules        # keep container's node_modules
+    depends_on:
+      backend:
+        condition: service_healthy

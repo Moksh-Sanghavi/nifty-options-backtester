@@ -1,0 +1,407 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-heading: var(--font-display), var(--font-sans), sans-serif;
+  --font-display: var(--font-display), var(--font-sans), sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-positive: var(--positive);
+  --color-positive-foreground: var(--positive-foreground);
+  --color-negative: var(--negative);
+  --color-negative-foreground: var(--negative-foreground);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --positive: oklch(0.6 0.15 158);
+  --positive-foreground: oklch(0.98 0 0);
+  --negative: oklch(0.6 0.2 18);
+  --negative-foreground: oklch(0.98 0 0);
+}
+
+.dark {
+  /* High-contrast institutional terminal palette (cool near-black base). */
+  --background: oklch(0.16 0.008 256);
+  --foreground: oklch(0.96 0.004 250);
+  --card: oklch(0.205 0.011 256);
+  --card-foreground: oklch(0.96 0.004 250);
+  --popover: oklch(0.205 0.011 256);
+  --popover-foreground: oklch(0.96 0.004 250);
+  --primary: oklch(0.74 0.15 162);
+  --primary-foreground: oklch(0.19 0.03 165);
+  --secondary: oklch(0.27 0.012 256);
+  --secondary-foreground: oklch(0.96 0.004 250);
+  --muted: oklch(0.26 0.011 256);
+  --muted-foreground: oklch(0.7 0.012 256);
+  --accent: oklch(0.29 0.013 256);
+  --accent-foreground: oklch(0.97 0.004 250);
+  --destructive: oklch(0.68 0.2 18);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.74 0.15 162);
+  --chart-1: oklch(0.74 0.15 162);
+  --chart-2: oklch(0.68 0.16 230);
+  --chart-3: oklch(0.78 0.15 80);
+  --chart-4: oklch(0.7 0.18 300);
+  --chart-5: oklch(0.68 0.2 18);
+  --positive: oklch(0.76 0.16 158);
+  --positive-foreground: oklch(0.18 0.03 160);
+  --negative: oklch(0.68 0.2 18);
+  --negative-foreground: oklch(0.18 0.03 20);
+  --sidebar: oklch(0.18 0.009 256);
+  --sidebar-foreground: oklch(0.96 0.004 250);
+  --sidebar-primary: oklch(0.74 0.15 162);
+  --sidebar-primary-foreground: oklch(0.19 0.03 165);
+  --sidebar-accent: oklch(0.27 0.012 256);
+  --sidebar-accent-foreground: oklch(0.97 0.004 250);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.74 0.15 162);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Inter refinements: contextual alternates + slightly tighter tracking. */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Layered ambient glow for depth (institutional terminal feel). */
+    background-image:
+      radial-gradient(
+        1200px 600px at 12% -10%,
+        color-mix(in oklch, var(--primary) 10%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        900px 500px at 100% 0%,
+        color-mix(in oklch, var(--chart-2) 8%, transparent),
+        transparent
+      );
+    background-attachment: fixed;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Headings use the display face with tighter optical tracking. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-feature-settings: normal;
+  }
+}
+
+@layer components {
+  /*
+   * Frosted, translucent panel.
+   *
+   * Built from three stacked layers for tangible depth:
+   *  1. a faint diagonal sheen (top-left light source),
+   *  2. a translucent card tint that the backdrop blur shows through,
+   *  3. a 1px gradient "hairline" border masked onto the edge (via ::before).
+   */
+  .glass-panel {
+    position: relative;
+    background:
+      linear-gradient(
+        135deg,
+        oklch(1 0 0 / 7%) 0%,
+        oklch(1 0 0 / 1.5%) 28%,
+        transparent 60%
+      ),
+      color-mix(in oklch, var(--card) 64%, transparent);
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    border: 1px solid transparent;
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 8%) inset,
+      0 0 0 1px oklch(0 0 0 / 6%),
+      0 2px 4px oklch(0 0 0 / 30%),
+      0 18px 50px -18px oklch(0 0 0 / 65%),
+      0 40px 80px -40px oklch(0 0 0 / 50%);
+  }
+
+  /* Gradient hairline edge — brighter at the top where light catches it. */
+  .glass-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      160deg,
+      oklch(1 0 0 / 22%),
+      oklch(1 0 0 / 5%) 22%,
+      oklch(1 0 0 / 0%) 50%,
+      oklch(1 0 0 / 6%) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /*
+   * Frosted card — a lighter, interactive variant for metric tiles & chart
+   * surfaces. Lifts and brightens its edge on hover for a tactile response.
+   */
+  .glass-card {
+    position: relative;
+    background:
+      linear-gradient(
+        150deg,
+        oklch(1 0 0 / 6%),
+        oklch(1 0 0 / 1%) 40%,
+        transparent 70%
+      ),
+      color-mix(in oklch, var(--card) 55%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid oklch(1 0 0 / 8%);
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 6%) inset,
+      0 1px 2px oklch(0 0 0 / 25%),
+      0 14px 36px -20px oklch(0 0 0 / 60%);
+    transition:
+      transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.32s ease;
+  }
+  .glass-card:hover {
+    transform: translateY(-2px);
+    border-color: oklch(1 0 0 / 14%);
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 9%) inset,
+      0 2px 4px oklch(0 0 0 / 30%),
+      0 24px 50px -22px oklch(0 0 0 / 70%),
+      0 0 0 1px color-mix(in oklch, var(--primary) 16%, transparent);
+  }
+
+  /* Static frosted surface for large containers (charts, tables). */
+  .glass-surface {
+    position: relative;
+    background:
+      linear-gradient(
+        150deg,
+        oklch(1 0 0 / 5%),
+        oklch(1 0 0 / 1%) 40%,
+        transparent 72%
+      ),
+      color-mix(in oklch, var(--card) 58%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid oklch(1 0 0 / 8%);
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 6%) inset,
+      0 1px 2px oklch(0 0 0 / 25%),
+      0 16px 40px -22px oklch(0 0 0 / 62%);
+  }
+
+  /* Soft "paper-cut" elevation for cards. */
+  .elevated {
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 5%) inset,
+      0 1px 1px oklch(0 0 0 / 25%),
+      0 8px 24px -14px oklch(0 0 0 / 60%);
+  }
+
+  /* Emerald focus glow for the hero / primary surfaces. */
+  .glow-primary {
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--primary) 22%, transparent),
+      0 0 28px -6px color-mix(in oklch, var(--primary) 35%, transparent),
+      0 18px 50px -18px oklch(0 0 0 / 65%);
+  }
+
+  /* Tabular figures for crisp numeric alignment. */
+  .nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* Gradient headline text (emerald → foreground). */
+  .text-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--foreground),
+      color-mix(in oklch, var(--primary) 70%, var(--foreground))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/*
+ * Ultra-fine film grain over the whole viewport. Sells the "physical glass"
+ * look by breaking up flat gradients into a tangible, lit surface.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* Keep real content above the grain layer. */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Charts Explorer tooltip ──────────────────────────────────────────── */
+.ce-tooltip {
+  min-width: 168px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--foreground);
+  background: color-mix(in oklch, var(--popover) 78%, transparent);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid oklch(1 0 0 / 12%);
+  box-shadow:
+    0 1px 0 0 oklch(1 0 0 / 8%) inset,
+    0 12px 30px -10px oklch(0 0 0 / 70%);
+  transition: opacity 0.14s ease;
+  transform: translateZ(0);
+}
+.ce-tt-date {
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid oklch(1 0 0 / 9%);
+}
+.ce-tt-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ce-tt-row span {
+  color: var(--muted-foreground);
+}
+.ce-tt-row b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ce-tt-ohlc {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  gap: 2px 8px;
+  margin-top: 2px;
+}
+.ce-tt-ohlc span {
+  color: var(--muted-foreground);
+  font-weight: 600;
+}
+.ce-tt-ohlc b {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Slim, terminal-style scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
+  border-radius: 9999px;
+}

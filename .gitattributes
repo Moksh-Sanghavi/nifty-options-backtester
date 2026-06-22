@@ -1,0 +1,7 @@
+# Keep shell scripts LF on every OS so macOS doesn't choke on CRLF
+# ("bad interpreter" / "no such file or directory" errors).
+*.command text eol=lf
+*.sh      text eol=lf
+
+# Keep Windows PowerShell scripts CRLF.
+*.ps1     text eol=crlf

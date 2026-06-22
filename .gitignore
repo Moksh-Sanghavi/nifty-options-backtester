@@ -1,0 +1,38 @@
+# ── Python ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Data artifacts ──────────────────────────────────────────────────────
+# Parquet datasets ARE committed (small, ~16 MB) so a fresh clone runs right away.
+# If you ever add a very large dataset (>50 MB per file), ignore that one
+# specifically here, or use Git LFS for it instead.
+*.xlsx
+*.png
+
+# ── Redis runtime snapshot ──────────────────────────────────────────────
+*.rdb
+
+# ── Node / Next.js ──────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Editor / OS ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db
+
+# ── Local run artifacts (from start/stop scripts) ───────────────────────
+logs/
+.run/
