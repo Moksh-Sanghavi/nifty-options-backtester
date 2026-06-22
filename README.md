@@ -1,6 +1,6 @@
 # 📈 Nifty Options Backtester
 
-A full-stack web application for backtesting **Nifty 50 options strategies** — wrapping a production-grade quant engine in an asynchronous API and a premium, interactive dashboard.
+A full stack web application for backtesting **Nifty 50 options strategies**,  wrapping a production grade quant engine in an asynchronous API and a premium, interactive dashboard.
 
 <p align="center">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?logo=next.js">
@@ -13,7 +13,7 @@ A full-stack web application for backtesting **Nifty 50 options strategies** —
 
 ---
 
-## ✨ Features
+## Features
 
 - **Two built-in strategies**
   - **Wall Reversion** — detects implied-volatility anomalies across the option chain and trades reversions.
@@ -28,7 +28,7 @@ A full-stack web application for backtesting **Nifty 50 options strategies** —
 
 ---
 
-## 🧱 Tech stack
+## Tech stack
 
 | Layer          | Technology                                                            |
 |----------------|----------------------------------------------------------------------|
@@ -40,7 +40,7 @@ A full-stack web application for backtesting **Nifty 50 options strategies** —
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Browser ──HTTP──> FastAPI (API) ──enqueue──> Redis ──> Celery worker
@@ -53,7 +53,7 @@ The browser talks only to the Next.js server, which proxies `/api/*` to FastAPI 
 
 ---
 
-## 🚀 Quick start
+##  Quick start
 
 ### Prerequisites
 - **Python** 3.12+ (tested on 3.14)
@@ -62,10 +62,10 @@ The browser talks only to the Next.js server, which proxies `/api/*` to FastAPI 
 
 ### 1. Clone
 ```bash
-git clone https://github.com/<your-username>/nifty-options-backtester.git
+git clone https://github.com/Moksh-Sanghavi/nifty-options-backtester.git
 cd nifty-options-backtester
 ```
-> ✅ A sample dataset (`backend/data/*.parquet`, Dec 2023) is included, so you can run immediately after installing dependencies — no data prep required.
+>  A sample dataset (`backend/data/*.parquet`, Dec 2023) is included, so you can run immediately after installing dependencies.
 
 ### 2. Install dependencies
 ```bash
@@ -109,8 +109,8 @@ cd frontend && npm run dev
 ```
 > `--pool=solo` is required for Celery on Windows (the default prefork pool isn't supported there).
 
-- 🖥️ App: **http://localhost:3000**
-- 📚 API docs: **http://localhost:8000/docs**
+-  App: **http://localhost:3000**
+-  API docs: **http://localhost:8000/docs**
 
 ### Or with Docker
 ```bash
@@ -120,7 +120,7 @@ Brings up Redis, API, worker, and frontend together (waits on healthchecks). Req
 
 ---
 
-## 📂 Project structure
+## Project structure
 
 ```
 backend/
@@ -144,7 +144,7 @@ start-mac.command / stop-mac.command # one-command launch (macOS)
 
 ---
 
-## 🔧 Extending it
+## Extending it
 
 Adding a new dataset or a new strategy is documented step-by-step in
 **[extending_the_backtester_guide.md](extending_the_backtester_guide.md)**:
@@ -156,7 +156,7 @@ Per-OS run details: **[nifty_backtester_run_guide.md](nifty_backtester_run_guide
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Transaction costs (brokerage, STT, exchange, GST, stamp duty) are modeled per NSE/NFO rates in `backend/app/engine/constants.py`.
 - Backtest runtime scales roughly linearly with the number of trading days; the worker runs single-threaded (`--pool=solo`).
