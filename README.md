@@ -52,8 +52,6 @@ graph TD
         C -->|3. Consume Job Queue| D[Celery Worker]
         D -->|5. Push Live Progress & Final Results| C
     end
-
-    style subgraph fill:none,stroke:#333,stroke-dasharray: 5 5
 ```
 > *The browser communicates exclusively with the Next.js server, which proxies `/api/*` to FastAPI. A single origin serves the entire application, eliminating CORS overhead.*
 
