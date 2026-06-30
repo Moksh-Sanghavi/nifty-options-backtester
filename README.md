@@ -43,13 +43,17 @@ A full-stack web application for backtesting **Options strategies** on Nifty and
 ## Architecture
 
 ```mermaid
-graph LR
-    A[Browser] -- HTTP --> B(FastAPI API)
-    A -. Poll Status .-> B
-    B -- Enqueue --> C[(Redis)]
-    C -- Consume --> D[Celery Worker]
-    D -- Run Engine --> D
-    D -- Store Results --> C
+graph TD
+    A[Browser / Next.js Frontend] -->|1. HTTP Post Request| B(FastAPI API)
+    A -.->|4. Long Poll Status| B
+    
+    subgraph Async Compute Layer
+        B -->|2. Enqueue Background Task| C[(Redis Broker)]
+        C -->|3. Consume Job Queue| D[Celery Worker]
+        D -->|5. Push Live Progress & Final Results| C
+    end
+
+    style subgraph fill:none,stroke:#333,stroke-dasharray: 5 5
 ```
 > *The browser communicates exclusively with the Next.js server, which proxies `/api/*` to FastAPI. A single origin serves the entire application, eliminating CORS overhead.*
 
@@ -64,7 +68,7 @@ graph LR
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Moksh-Sanghavi/nifty-options-backtester.git.
+git clone https://github.com/Moksh-Sanghavi/Options-backtester.git.
 cd nifty-options-backtester
 ```
 
