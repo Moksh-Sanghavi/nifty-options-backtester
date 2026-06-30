@@ -1,6 +1,6 @@
-# Nifty Options Backtester
+# Nifty & Bank Nifty Options Backtester
 
-A full-stack web application for backtesting **Options strategies** — wrapping a production-grade quant engine in an asynchronous API and a premium, interactive dashboard.
+A full-stack web application for backtesting **Options strategies** on Nifty and Bank Nifty indices — wrapping a production-grade quant engine in an asynchronous API and a premium, interactive dashboard.
 
 <p align="center">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?logo=next.js">
@@ -15,150 +15,136 @@ A full-stack web application for backtesting **Options strategies** — wrapping
 
 ## Features
 
-- **Built-in strategies**
-  - **Wall Reversion** — detects implied-volatility anomalies across the option chain and trades reversions.
-  - **Opening Range Breakout (ORB)** — detects the breakout entires as compared to the opening range (max and min values of the underlying within a defined timeframe)
-  - **Short Straddle** - sell atm call + put, along with breakeven shift SL
-  - Run either alone or **combined**, with customizable paramters like capital, IV thresholds, required anomalies, the exit rules (stop loss, trailing stop loss, holding period) and session timing.
-- **Asynchronous backtesting** — runs are queued to a Celery worker so the UI stays responsive, with **live "processing day N of M" progress**.
-- **Interactive Charts Explorer (D3.js)** — switch between **Equity Curve**, **Max Drawdown**, and **Spot Price Candlestick** views on one synchronized daily axis, with rich tooltips, a crosshair, and peak-drawdown markers.
-- **Full performance tear sheet** — 6 headline metrics (Total PnL, Max DD, Sharpe, trade win rate, profit factor, initial capital) plus a paginated trade log with CE/PE and win/loss cues.
-- **Premium dark UI** — frosted-glass "terminal" aesthetic with realistic depth and light diffusion.
-- **Robust error handling** — readable validation errors, missing-dataset and empty-result states, all surfaced cleanly in the UI.
-- **One-command launch** on Windows *and* macOS, plus a Docker path.
+- **Built-In Strategies**
+  - **Wall Reversion:** Detects implied-volatility anomalies across the option chain and trades reversions.
+  - **Opening Range Breakout (ORB):** Detects breakout entries compared to the opening range (max and min values of the underlying within a defined timeframe).
+  - **Short Straddle:** Sells ATM Call + Put, featuring a breakeven shift Stop Loss (SL).
+  - *Note:* Run strategies independently or **combined** across Nifty and Bank Nifty data, with customizable parameters (capital, IV thresholds, anomaly requirements, exit rules, and session timings).
+- **Asynchronous Backtesting:** Runs are queued to a Celery worker, keeping the UI highly responsive with live **"processing day N of M"** progress tracking.
+- **Interactive Charts Explorer (D3.js):** Seamlessly switch between **Equity Curve**, **Max Drawdown**, and **Spot Price Candlestick** views on a synchronized daily axis. Includes rich tooltips, crosshairs, and peak-drawdown markers.
+- **Comprehensive Tear Sheet:** Tracks 6 headline metrics (Total PnL, Max DD, Sharpe, Win Rate, Profit Factor, Initial Capital) alongside a paginated trade log featuring CE/PE and win/loss cues.
+- **Premium Dark UI:** Frosted-glass "terminal" aesthetic with realistic depth and light diffusion.
+- **Robust Error Handling:** Readable validation errors, missing-dataset alerts, and empty-result states surfaced cleanly in the UI.
 
 ---
 
-## Tech stack
+## Tech Stack
 
-| Layer          | Technology                                                            |
+| Layer          | Technology                                                           |
 |----------------|----------------------------------------------------------------------|
-| Frontend       | Next.js 16 (App Router), React 19, Tailwind v4, shadcn/ui, **D3.js** |
-| Backend        | FastAPI, Pydantic                                                    |
-| Async compute  | Celery + Redis                                                       |
-| Data / quant   | Pandas, NumPy, SciPy, PyArrow (Parquet)                              |
-| Tooling        | Docker, Docker Compose                                               |
+| **Frontend** | Next.js 16 (App Router), React 19, Tailwind v4, shadcn/ui, **D3.js** |
+| **Backend** | FastAPI, Pydantic                                                    |
+| **Async Tasks**| Celery + Redis                                                       |
+| **Quant / Data**| Pandas, NumPy, SciPy, PyArrow (Parquet)                             |
+| **Tooling** | Docker, Docker Compose                                               |
 
 ---
 
 ## Architecture
 
+```mermaid
+graph LR
+    A[Browser] -- HTTP --> B(FastAPI API)
+    A -. Poll Status .-> B
+    B -- Enqueue --> C[(Redis)]
+    C -- Consume --> D[Celery Worker]
+    D -- Run Engine --> D
+    D -- Store Results --> C
 ```
-Browser ──HTTP──> FastAPI (API) ──enqueue──> Redis ──> Celery worker
-   ▲                  │                                     │
-   └──── poll status ─┘                                     │ runs the engine
-                      └──────── results stored in Redis <───┘
-```
-
-The browser talks only to the Next.js server, which proxies `/api/*` to FastAPI — so a single origin serves the whole app (no CORS setup needed).
+> *The browser communicates exclusively with the Next.js server, which proxies `/api/*` to FastAPI. A single origin serves the entire application, eliminating CORS overhead.*
 
 ---
 
-## Quick start
+## Quick Start
 
 ### Prerequisites
-- **Python** 3.12+ (tested on 3.14)
-- **Node.js** 20+ (tested on 24)
+- **Python** 3.12+ 
+- **Node.js** 20+
 - **Redis** 5+
 
-### 1. Clone
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/Moksh-Sanghavi/nifty-options-backtester.git
+git clone https://github.com/Moksh-Sanghavi/nifty-options-backtester.git.
 cd nifty-options-backtester
 ```
 
+### 2. Install Dependencies
 
-### 2. Install dependencies
+**Backend (Python):**
 ```bash
-# Backend (Python)
 cd backend
 python -m venv .venv
-# Windows:  .venv\Scripts\activate     |   macOS/Linux:  source .venv/bin/activate
+# Windows:  .venv\Scripts\activate      |   macOS/Linux:  source .venv/bin/activate
 pip install -r requirements.txt
 cd ..
+```
 
-# Frontend (Node)
+**Frontend (Node.js):**
+```bash
 cd frontend
 npm install
 cd ..
 ```
 
-### 3. Run
+### 3. Run the Application
 
-**One command (recommended):**
+**One-Command Launch (Recommended):**
 
 | OS | Command |
 |----|---------|
-| **Windows** | `powershell -ExecutionPolicy Bypass -File start-all.ps1` (or double-click the desktop shortcut) |
-| **macOS**   | `./start-mac.command` (first time: `chmod +x start-mac.command stop-mac.command`) |
+| **Windows** | `powershell -ExecutionPolicy Bypass -File start-all.ps1` (or execute desktop shortcut) |
+| **macOS** | `./start-mac.command` (First time: `chmod +x start-mac.command stop-mac.command`) |
 
-This starts Redis, the API, the Celery worker, and the frontend, then opens the app. Stop everything with `stop-all.ps1` / `./stop-mac.command`.
+*This script boots Redis, the API, the Celery worker, and the frontend, automatically opening the app. Teardown with `stop-all.ps1` or `./stop-mac.command`.*
 
-**Or start each service manually** (4 terminals):
-```bash
-# 1. Redis
-redis-server
-
-# 2. FastAPI  (activate the venv first)
-uvicorn app.main:app --reload --app-dir backend --host 0.0.0.0 --port 8000
-
-# 3. Celery worker  (from backend/, venv active)
-celery -A app.celery_app.celery worker --loglevel=info --pool=solo
-
-# 4. Frontend
-cd frontend && npm run dev
-```
-> `--pool=solo` is required for Celery on Windows (the default prefork pool isn't supported there).
-> 
-
-### Or with Docker
+**Docker (Alternative):**
 ```bash
 docker compose up --build
 ```
-Brings up Redis, API, worker, and frontend together (waits on healthchecks). Requires Docker Desktop.
+*Requires Docker Desktop. Initializes Redis, API, worker, and frontend simultaneously.*
 
 ---
 
-## Project structure
+## Project Structure
 
-```
+```text
 backend/
   app/
-    engine/        # the quant engine: strategy, execution, analytics, data, IV, costs
-    main.py        # FastAPI routes
-    tasks.py       # Celery task wrapping a backtest run
-    celery_app.py  # Celery + Redis config
+    engine/        # Quant engine: strategy, execution, analytics, data, IV, costs
+    main.py        # FastAPI routing
+    tasks.py       # Celery tasks wrapping backtest runs
+    celery_app.py  # Celery & Redis configuration
     schemas.py     # API request/response models
   scripts/
-    convert_to_parquet.py   # CSV → Parquet converter
-  data/            # Parquet datasets 
+    convert_to_parquet.py   # CSV → Parquet utility
+  data/            # Nifty and Bank Nifty Parquet datasets 
 frontend/
   src/
-    components/    # dashboard, config panel, charts-explorer (D3), tear sheet, trade log
-    hooks/         # backtest run/poll state machine
-    lib/           # typed API client, formatters, chart data
-start-all.ps1 / stop-all.ps1        # one-command launch (Windows)
-start-mac.command / stop-mac.command # one-command launch (macOS)
+    components/    # Dashboards, config panels, D3 charts, tear sheets, trade logs
+    hooks/         # Backtest run/poll state machines
+    lib/           # Typed API clients, formatters, chart data
 ```
 
 ---
 
-## Extending it
+## Extending the Engine
 
-Adding a new dataset or a new strategy is documented step-by-step in
-**[extending_the_backtester_guide.md](extending_the_backtester_guide.md)**:
+Detailed instructions for integrating new underlying datasets or strategies can be found in the **[Extending the Backtester Guide](extending_the_backtester_guide.md)**.
 
-- **New data** is essentially drop-in — run the converter with a new `--dataset` name and it auto-appears in the UI.
-- **New strategies** are a contained code change; the entire results pipeline (charts, metrics, trade log) is strategy-agnostic and works automatically once your strategy emits trades.
+- **New Data:** Drop-in ready. Run the converter script with a new `--dataset` flag, and it will automatically populate in the UI, allowing you to easily scale beyond Nifty and Bank Nifty.
+- **New Strategies:** Highly modular. The results pipeline (charts, metrics, trade logs) is strategy-agnostic and functions automatically once your custom strategy emits trade events.
+
+---
+
+## Technical Notes
+
+- Transaction costs (brokerage, STT, exchange fees, GST, stamp duty) are modeled strictly per current **NSE/NFO rates** in `backend/app/engine/constants.py`.
+- Backtest runtime scales linearly with the number of trading days. Note that the Celery worker runs single-threaded (`--pool=solo`) to maintain compatibility across OS environments.
+- The repository includes sample data for demonstration purposes. Swap in your proprietary historical Nifty or Bank Nifty data via the included converter.
 
 ---
 
-## Notes
-
-- Transaction costs (brokerage, STT, exchange, GST, stamp duty) are modeled per NSE/NFO rates in `backend/app/engine/constants.py`.
-- Backtest runtime scales roughly linearly with the number of trading days; the worker runs single-threaded (`--pool=solo`).
-- The included data is a sample for demonstration; swap in your own via the converter.
-
----
+### Disclaimer
+*This software is for educational and research purposes only. Do not use this engine to make live financial decisions without independent verification. The developers assume no liability for financial losses incurred.*
 
 <p align="center"><sub>Built with FastAPI · Celery · Next.js · D3.js</sub></p>
