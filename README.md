@@ -1,6 +1,6 @@
-# 📈 Nifty Options Backtester
+# Nifty Options Backtester
 
-A full-stack web application for backtesting **Nifty 50 options strategies** — wrapping a production-grade quant engine in an asynchronous API and a premium, interactive dashboard.
+A full-stack web application for backtesting **Options strategies** — wrapping a production-grade quant engine in an asynchronous API and a premium, interactive dashboard.
 
 <p align="center">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?logo=next.js">
@@ -13,22 +13,23 @@ A full-stack web application for backtesting **Nifty 50 options strategies** —
 
 ---
 
-## ✨ Features
+## Features
 
-- **Two built-in strategies**
+- **Built-in strategies**
   - **Wall Reversion** — detects implied-volatility anomalies across the option chain and trades reversions.
-  - **Opening Range Breakout (ORB)** — breakout entries with asymmetric, trend-aware position sizing.
-  - Run either alone or **combined**, with configurable capital, risk-per-trade, IV thresholds, and session timing.
+  - **Opening Range Breakout (ORB)** — detects the breakout entires as compared to the opening range (max and min values of the underlying within a defined timeframe)
+  - **Short Straddle** - sell atm call + put, along with breakeven shift SL
+  - Run either alone or **combined**, with customizable paramters like capital, IV thresholds, required anomalies, the exit rules (stop loss, trailing stop loss, holding period) and session timing.
 - **Asynchronous backtesting** — runs are queued to a Celery worker so the UI stays responsive, with **live "processing day N of M" progress**.
 - **Interactive Charts Explorer (D3.js)** — switch between **Equity Curve**, **Max Drawdown**, and **Spot Price Candlestick** views on one synchronized daily axis, with rich tooltips, a crosshair, and peak-drawdown markers.
-- **Full performance tear sheet** — 8 headline metrics (Total PnL, ROI, Max DD, Sharpe, win rates, profit factor) plus a paginated trade log with CE/PE and win/loss cues.
+- **Full performance tear sheet** — 6 headline metrics (Total PnL, Max DD, Sharpe, trade win rate, profit factor, initial capital) plus a paginated trade log with CE/PE and win/loss cues.
 - **Premium dark UI** — frosted-glass "terminal" aesthetic with realistic depth and light diffusion.
 - **Robust error handling** — readable validation errors, missing-dataset and empty-result states, all surfaced cleanly in the UI.
 - **One-command launch** on Windows *and* macOS, plus a Docker path.
 
 ---
 
-## 🧱 Tech stack
+## Tech stack
 
 | Layer          | Technology                                                            |
 |----------------|----------------------------------------------------------------------|
@@ -40,7 +41,7 @@ A full-stack web application for backtesting **Nifty 50 options strategies** —
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Browser ──HTTP──> FastAPI (API) ──enqueue──> Redis ──> Celery worker
@@ -53,7 +54,7 @@ The browser talks only to the Next.js server, which proxies `/api/*` to FastAPI 
 
 ---
 
-## 🚀 Quick start
+## Quick start
 
 ### Prerequisites
 - **Python** 3.12+ (tested on 3.14)
@@ -62,10 +63,10 @@ The browser talks only to the Next.js server, which proxies `/api/*` to FastAPI 
 
 ### 1. Clone
 ```bash
-git clone https://github.com/<your-username>/nifty-options-backtester.git
+git clone https://github.com/Moksh-Sanghavi/nifty-options-backtester.git
 cd nifty-options-backtester
 ```
-> ℹ️ The app uses the multi-year **`nifty`** dataset (Jan 2023 – Feb 2026). It's too large to commit, so generate it once from the raw CSVs with the converter — see [Multi-year dataset](#multi-year-dataset-jan-2023--feb-2026) below — before the first run.
+
 
 ### 2. Install dependencies
 ```bash
@@ -108,9 +109,7 @@ celery -A app.celery_app.celery worker --loglevel=info --pool=solo
 cd frontend && npm run dev
 ```
 > `--pool=solo` is required for Celery on Windows (the default prefork pool isn't supported there).
-
-- 🖥️ App: **http://localhost:3000**
-- 📚 API docs: **http://localhost:8000/docs**
+> 
 
 ### Or with Docker
 ```bash
@@ -120,7 +119,7 @@ Brings up Redis, API, worker, and frontend together (waits on healthchecks). Req
 
 ---
 
-## 📂 Project structure
+## Project structure
 
 ```
 backend/
@@ -132,7 +131,7 @@ backend/
     schemas.py     # API request/response models
   scripts/
     convert_to_parquet.py   # CSV → Parquet converter
-  data/            # Parquet datasets (included)
+  data/            # Parquet datasets 
 frontend/
   src/
     components/    # dashboard, config panel, charts-explorer (D3), tear sheet, trade log
@@ -144,7 +143,7 @@ start-mac.command / stop-mac.command # one-command launch (macOS)
 
 ---
 
-## 🔧 Extending it
+## Extending it
 
 Adding a new dataset or a new strategy is documented step-by-step in
 **[extending_the_backtester_guide.md](extending_the_backtester_guide.md)**:
@@ -152,35 +151,9 @@ Adding a new dataset or a new strategy is documented step-by-step in
 - **New data** is essentially drop-in — run the converter with a new `--dataset` name and it auto-appears in the UI.
 - **New strategies** are a contained code change; the entire results pipeline (charts, metrics, trade log) is strategy-agnostic and works automatically once your strategy emits trades.
 
-Per-OS run details: **[nifty_backtester_run_guide.md](nifty_backtester_run_guide.md)** (Windows) · **[mac_run_guide.md](mac_run_guide.md)** (macOS).
-
-### Multi-year dataset (Jan 2023 – Feb 2026)
-
-The bundled `dec2023` sample is a single month. To use the full three-year,
-1-minute dataset, place the raw CSVs at the repo root:
-
-- `Options Data (Monthly Expiries from Jan 2023 - Feb 2026)/NIFTY_<expiry>.csv` — one file per monthly expiry
-- `Spot (Jan 2023 - Feb 2026).csv` — spot OHLCV + `ATM_Strike`
-
-Then convert once (from `backend/`, venv active):
-
-```bash
-python -m scripts.convert_to_parquet          # uses the bundled paths → dataset "nifty"
-```
-
-This writes a **partitioned** Parquet dataset — `data/options_nifty/expiry=YYYY-MM-DD/data.parquet`
-per expiry, plus a minute-aligned `data/spot_nifty.parquet`. Both are git-ignored
-(too large to commit) and regenerated from the CSVs.
-
-Because the options data is partitioned by expiry, a backtest **only loads the
-expiry partitions that overlap its date range** — a one-month run reads a single
-~100 MB partition rather than the multi-GB whole. Pick the range with the
-calendar pickers (bounded to Jan 2023 – Feb 2026); the **Target Expiry** dropdown
-auto-populates with the expiries available for that range.
-
 ---
 
-## 📝 Notes
+## Notes
 
 - Transaction costs (brokerage, STT, exchange, GST, stamp duty) are modeled per NSE/NFO rates in `backend/app/engine/constants.py`.
 - Backtest runtime scales roughly linearly with the number of trading days; the worker runs single-threaded (`--pool=solo`).
